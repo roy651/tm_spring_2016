@@ -90,6 +90,9 @@ regex_strings = (
     # Emoticons:
     emoticon_string
     ,
+    # HTTP tags
+    r"""https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}"""
+    ,
     # HTML tags:
      r"""<[^>]+>"""
     ,
@@ -124,6 +127,7 @@ emoticon_re = re.compile(regex_strings[1], re.VERBOSE | re.I | re.UNICODE)
 # These are for regularizing HTML entities to Unicode:
 html_entity_digit_re = re.compile(r"&#\d+;")
 html_entity_alpha_re = re.compile(r"&\w+;")
+http_entity_re = re.compile(r"""https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}""")
 amp = "&amp;"
 
 ######################################################################
@@ -186,6 +190,12 @@ class Tokenizer:
                     s = s.replace(ent, unichr(entnum))
                 except:
                     pass
+        # Now the HTTP links:
+        ents = set(http_entity_re.findall(s))
+        if len(ents) > 0:
+            for ent in ents:
+                # s = s.replace(ent, "###HREF")
+                s = s.replace(ent, "")
         # Now the alpha versions:
         ents = set(html_entity_alpha_re.findall(s))
         ents = filter((lambda x : x != amp), ents)
@@ -195,7 +205,7 @@ class Tokenizer:
                 s = s.replace(ent, unichr(htmlentitydefs.name2codepoint[entname]))
             except:
                 pass
-            s = s.replace(amp, " and ")
+        s = s.replace(amp, " and ")
         return s
 
 ###############################################################################
@@ -203,9 +213,10 @@ class Tokenizer:
 if __name__ == '__main__':
     tok = Tokenizer(preserve_case=False)
     samples = (
-        u"RT @ #happyfuncoding: this is a typical Twitter tweet :-)",
+        # u"RT @ #happyfuncoding: this is a typical Twitter tweet :-)",
         u"HTML entities &amp; other Web oddities can be an &aacute;cute <em class='grumpy'>pain</em> >:(",
-        u"It's perhaps noteworthy that phone numbers like +1 (800) 123-4567, (800) 123-4567, and 123-4567 are treated as words despite their whitespace."
+        # u"It's perhaps noteworthy that phone numbers like +1 (800) 123-4567, (800) 123-4567, and 123-4567 are treated as words despite their whitespace.",
+        u"Charlie Sheen investigated by LAPD https://t.co/Ky0jiKPrgP FIRED,AIDS,&amp; THIS. GORDON GEKKO MUST BE REALLY HAPPY RE WHAT HAPPENED TO THIS GUY"
         )
 
     for s in samples:

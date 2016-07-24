@@ -11,7 +11,7 @@ from nltk.corpus import stopwords
 from happyfuntokenizer import Tokenizer
 
 r = re.compile('^\s*(NULL)*\s*$')
-stop = stopwords.words('english') + ['https://t.co', 'http://t.co', 'https', ':/', 'co', '/'] #, '.', '*', ',', '-']
+stop = stopwords.words('english') + ['https://t.co', 'http://t.co', 'https', ':/', 'co', '/', '&', 'amp', ';'] #, '.', '*', ',', '-']
 tok = Tokenizer(preserve_case=False)
 
 def int_overflow(val):
