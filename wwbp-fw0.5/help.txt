@@ -1,0 +1,614 @@
+usage: fwInterface.py [-h] [--to_file [TOINITFILE]] [--from_file FROMINITFILE]
+                      [-d DB] [-t TABLE] [-c FIELD] [-H HOST]
+                      [--message_field FIELD] [--messageid_field FIELD]
+                      [--date_field FIELD] [--lexicondb DB] [--encoding DB]
+                      [--no_unicode] [-f TABLE [TABLE ...]] [-n N [N ...]]
+                      [--no_metafeats] [-l TABLE] [--word_table WORDTABLE]
+                      [--colloc_table TABLE] [--colloc_column COLUMN]
+                      [--feature_type_name STRING] [--gzip_csv filename]
+                      [--categories CATEGORYIES) [CATEGORY(IES) ...]]
+                      [--feat_blacklist FEAT(S) [FEAT(S) ...]]
+                      [--feat_whitelist FEAT(S) [FEAT(S) ...]] [--sqrt]
+                      [--log] [--anscombe] [--boolean] [--lex_sqrt]
+                      [--lex_log] [--lex_anscombe] [--lex_boolean]
+                      [--set_p_occ P] [--set_pmi_threshold PMI]
+                      [--set_min_feat_sum N] [--topic_file TOPICFILE]
+                      [--num_topic_words NUMTOPICWORDS]
+                      [--topic_lexicon TOPICLEXICON]
+                      [--topic_list TOPICLIST [TOPICLIST ...]]
+                      [--topic_lex_method TOPICLEXMETHOD] [--weighted_lexicon]
+                      [--num_bins NUMBINS] [--flexiplot_file FLEXIPLOTFILE]
+                      [--group_id_range GROUPIDRANGE GROUPIDRANGE]
+                      [--mask_table TABLE] [--outcome_table TABLE]
+                      [--outcome_fields FIELD(S) [FIELD(S) ...]]
+                      [--outcome_controls FIELD(S) [FIELD(S) ...]]
+                      [--outcome_interaction TERM(S) [TERM(S) ...]]
+                      [--feat_names FIELD(S) [FIELD(S) ...]]
+                      [--group_freq_thresh N] [--output_name OUTPUTNAME]
+                      [--max_tagcloud_words N] [--show_feat_freqs]
+                      [--not_show_feat_freqs] [--tagcloud_filter]
+                      [--no_tagcloud_filter]
+                      [--feat_labelmap_table FEATLABELMAPTABLE]
+                      [--feat_labelmap_lex FEATLABELMAPLEX] [--bracket_labels]
+                      [--comparative_tagcloud]
+                      [--sample1 COMPTCSAMPLE1 [COMPTCSAMPLE1 ...]]
+                      [--sample2 COMPTCSAMPLE2 [COMPTCSAMPLE2 ...]] [--csv]
+                      [--pickle] [--sort] [--whitelist] [--blacklist]
+                      [--spearman] [--logistic_reg] [--IDP] [--AUC]
+                      [--zScoreGroup] [--p_correction METHOD]
+                      [--no_bonferroni] [--no_correction] [--nvalue NVALUE]
+                      [--freq FREQ]
+                      [--tagcloud_colorscheme TAGCLOUDCOLORSCHEME]
+                      [--interactions] [--bootstrapp BOOTSTRAPP] [--p_value P]
+                      [--mediation] [--mediation_bootstrap]
+                      [--mediation_boot_num N]
+                      [--outcome_pathstarts FIELD(S) [FIELD(S) ...]]
+                      [--outcome_mediators FIELD(S) [FIELD(S) ...]]
+                      [--feat_as_path_start] [--feat_as_outcome]
+                      [--feat_as_control] [--no_features] [--mediation_csv]
+                      [--mediation_no_summary] [--mediation_method METHOD]
+                      [--model name] [--combined_models name [name ...]]
+                      [--sparse] [--folds NUM] [--picklefile filename]
+                      [--all_controls_only] [--no_lang]
+                      [--control_combo_sizes index [index ...]]
+                      [--residualized_controls] [--prediction_csv]
+                      [--weighted_eval WEIGHTEDEVAL] [--no_standardize]
+                      [--add_ngrams] [--add_ngrams_from_tokenized]
+                      [--use_collocs] [--include_sub_collocs]
+                      [--colloc_pmi_thresh PMI] [--add_lex_table]
+                      [--add_phrase_table] [--add_pos_table]
+                      [--add_pos_ngram_table] [--add_lda_table LDA_MSG_TABLE]
+                      [--add_tokenized] [--add_sent_tokenized] [--add_parses]
+                      [--add_segmented]
+                      [--segmentation_model SEGMENTATIONMODEL]
+                      [--add_tweettok] [--add_tweetpos]
+                      [--add_lda_messages LDA_States_File]
+                      [--add_outcome_feats] [--add_topiclex_from_topicfile]
+                      [--print_tokenized_lines FILENAME]
+                      [--print_joined_feature_lines FILENAME]
+                      [--add_timexdiff] [--add_postimexdiff] [--add_wn_nopos]
+                      [--add_wn_pos] [--add_fleschkincaid]
+                      [--add_pnames ADDPNAMES ADDPNAMES] [--add_ner]
+                      [--ttest_feat_tables] [--feat_occ_filter]
+                      [--combine_feat_tables COMBINEFEATTABLES]
+                      [--add_feat_norms] [--feat_colloc_filter]
+                      [--feat_correl_filter] [--make_topic_labelmap_lex]
+                      [--feat_group_by_outcomes]
+                      [--aggregate_feats_by_new_group] [--tf_idf]
+                      [--print_csv FILENAME] [--print_freq_csv FILENAME]
+                      [--print_numgroups] [--correlate] [--rmatrix]
+                      [--combo_rmatrix] [--topic_dupe_filter] [--tagcloud]
+                      [--topic_tagcloud] [--make_wordclouds]
+                      [--make_topic_wordclouds] [--use_featuretable_feats]
+                      [--outcome_with_outcome] [--output_interaction_terms]
+                      [--interaction_ddla INTERACTIONDDLA]
+                      [--interaction_ddla_pvalue DDLASIGNIFICANCE]
+                      [--DDLA DDLAFILES DDLAFILES] [--DDLATagcloud] [--multir]
+                      [--train_regression] [--test_regression]
+                      [--combo_test_regression] [--predict_regression]
+                      [--control_adjust_outcomes_regression]
+                      [--test_combined_regression featuretable [featuretable ...]]
+                      [--predict_regression_to_feats PREDICTRTOFEATS]
+                      [--predict_regression_to_outcome_table PREDICTRTOOUTCOMETABLE]
+                      [--predict_cv_to_feats PREDICTALLTOFEATS]
+                      [--train_classifiers] [--test_classifiers]
+                      [--combo_test_classifiers] [--predict_classifiers]
+                      [--roc] [--predict_classifiers_to_feats PREDICTCTOFEATS]
+                      [--predict_classifiers_to_outcome_table PREDICTCTOOUTCOMETABLE]
+                      [--regression_to_lexicon REGRTOLEX]
+                      [--classification_to_lexicon CLASSTOLEX]
+                      [--reducer_to_lexicon REDUCERTOLEXICON] [--fit_reducer]
+                      [--cca CCA] [--cca_penalty_feats PENALTYFEATS]
+                      [--cca_penalty_outcomes PENALTYOUTCOMES]
+                      [--cca_outcomes_vs_controls] [--cca_permute CCAPERMUTE]
+                      [--cca_predict_components] [--to_sql_table NEWSQLTABLE]
+                      [--train_c2r] [--test_c2r] [--predict_c2r]
+                      [--save_models] [--load_models] [--barplot]
+                      [--scatterplot] [--feat_flexibin] [--skip_bin_step]
+                      [--preserve_bin_table] [--descplot]
+                      [--loessplot FEAT(S) [FEAT(S ...]]
+
+Extract and Manage Language Feature Data.
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Meta Variables:
+
+  --to_file [TOINITFILE]
+                        write flag values to text file
+  --from_file FROMINITFILE
+                        reads flag values from file
+
+Corpus Variables:
+  Defining the data from which features are extracted.
+
+  -d DB, --corpdb DB    Corpus Database Name.
+  -t TABLE, --corptable TABLE
+                        Corpus Table.
+  -c FIELD, --correl_field FIELD
+                        Correlation Field (AKA Group Field): The field which
+                        features are aggregated over.
+  -H HOST, --host HOST  Host that the mysql server runs on (default: )
+  --message_field FIELD
+                        The field where the text to be analyzed is located.
+  --messageid_field FIELD
+                        The unique identifier for the message.
+  --date_field FIELD    Date a message was sent (if avail, for timex
+                        processing).
+  --lexicondb DB        The database which stores all lexicons.
+  --encoding DB         MySQL encoding
+  --no_unicode          Turn off unicode for reading/writing mysql and text
+                        processing.
+
+Feature Variables:
+  Use of these is dependent on the action.
+
+  -f TABLE [TABLE ...], --feat_table TABLE [TABLE ...]
+                        Table containing feature information to work with
+  -n N [N ...], --set_n N [N ...]
+                        The n value used for n-grams or co-occurence features
+  --no_metafeats        indicate not to extract meta features (word, message
+                        length) with ngrams
+  -l TABLE, --lex_table TABLE
+                        Lexicon Table Name: used for extracting category
+                        features from 1grams(or use --word_table to extract
+                        from other than 1gram)
+  --word_table WORDTABLE
+                        Table that contains the list of words to give for lex
+                        extraction/group_freq_thresh
+  --colloc_table TABLE  Table that holds a list of collocations to be used as
+                        features.
+  --colloc_column COLUMN
+                        Column giving collocations to be used as features.
+  --feature_type_name STRING
+                        Customize the name of output features.
+  --gzip_csv filename   gz-csv filename used for extracting ngrams
+  --categories CATEGORY(IES) [CATEGORY(IES) ...]
+                        Specify particular categories.
+  --feat_blacklist FEAT(S) [FEAT(S) ...]
+                        Features to ban when correlating with outcomes.
+  --feat_whitelist FEAT(S) [FEAT(S) ...]
+                        Only permit these features when correlating with
+                        outcomes (specify feature names or if feature table
+                        then read distinct features).
+  --sqrt                square-roots normalized group_norm freq information.
+  --log                 logs the normalized group_norm freq information.
+  --anscombe            anscombe transforms normalized group_norm freq
+                        information.
+  --boolean             boolean transforms normalized group_norm freq
+                        information (1 if true).
+  --lex_sqrt            square-roots normalized group_norm lexicon freq
+                        information.
+  --lex_log             logs the normalized group_norm lexicon freq
+                        information.
+  --lex_anscombe        anscombe transforms normalized group_norm lexicon freq
+                        information.
+  --lex_boolean         boolean transforms normalized group_norm freq
+                        information (1 if true).
+  --set_p_occ P         The probability of occurence of either a feature or
+                        group (altnernatively if > 1, then limits to top p_occ
+                        features instead).
+  --set_pmi_threshold PMI
+                        The threshold for the feat_colloc_filter.
+  --set_min_feat_sum N  The minimum a feature must occur across all groups, to
+                        be kept.
+  --topic_file TOPICFILE
+                        Name of topic file to use to build the topic lexicon.
+  --num_topic_words NUMTOPICWORDS
+                        Number of topic words to use as labels.
+  --topic_lexicon TOPICLEXICON
+                        this is the (topic) lexicon name specified as part of
+                        --make_feat_labelmap_lex and
+                        --add_topiclex_from_topicfile
+  --topic_list TOPICLIST [TOPICLIST ...]
+                        this is the list of topics to group together in a plot
+                        for --feat_flexibin
+  --topic_lex_method TOPICLEXMETHOD
+                        must be one of: "csv_lik", "standard"
+  --weighted_lexicon    use with Extraction Action add_lex_table to make
+                        weighted lexicon features
+  --num_bins NUMBINS    number of bins (feature refiner).
+  --flexiplot_file FLEXIPLOTFILE
+                        use with Plot Action --feat_flexibin to specify a file
+                        to read for plotting
+  --group_id_range GROUPIDRANGE GROUPIDRANGE
+                        range of group id's to include in binning.
+  --mask_table TABLE    Table containing which groups run in various bins (for
+                        ttest).
+
+Outcome Variables:
+
+  --outcome_table TABLE
+                        Table holding outcomes (make sure correl_field type
+                        matches corpus').
+  --outcome_fields FIELD(S) [FIELD(S) ...], --outcomes FIELD(S) [FIELD(S) ...]
+                        Fields to compare with.
+  --outcome_controls FIELD(S) [FIELD(S) ...], --controls FIELD(S) [FIELD(S) ...]
+                        Fields in outcome table to use as controls for
+                        correlation(regression).
+  --outcome_interaction TERM(S) [TERM(S) ...], --interaction TERM(S) [TERM(S) ...]
+                        Fields in outcome table to use as controls and
+                        interaction terms for correlation(regression).
+  --feat_names FIELD(S) [FIELD(S) ...]
+                        Limit outputs to the given set of features.
+  --group_freq_thresh N
+                        minimum WORD frequency per correl_field to include
+                        correl_field in results
+  --output_name OUTPUTNAME, --output OUTPUTNAME
+                        overrides the default filename for output
+  --max_tagcloud_words N
+                        Max words to appear in a tagcloud
+  --show_feat_freqs
+  --not_show_feat_freqs
+                        show / dont show feature frequencies in output.
+  --tagcloud_filter
+  --no_tagcloud_filter  filter / dont filter tag clouds for duplicate info in
+                        phrases.
+  --feat_labelmap_table FEATLABELMAPTABLE
+                        specifies an lda mapping tablename to be used for LDA
+                        topic mapping
+  --feat_labelmap_lex FEATLABELMAPLEX
+                        specifies a lexicon tablename to be used for the LDA
+                        topic mapping
+  --bracket_labels      use with: feat_labelmap_lex... if used, the labelmap
+                        features will be contained within brackets
+  --comparative_tagcloud
+                        used with --sample1 and --sample2, this option uses
+                        IDP to compare feature usage
+  --sample1 COMPTCSAMPLE1 [COMPTCSAMPLE1 ...]
+                        first sample of group to use in comparison [use with
+                        --comparative_tagcloud](use * to mean all groups in
+                        featuretable)
+  --sample2 COMPTCSAMPLE2 [COMPTCSAMPLE2 ...]
+                        second sample of group to use in comparison [use with
+                        --comparative_tagcloud](use * to mean all groups in
+                        featuretable)
+  --csv                 generate csv correl matrix output as well
+  --pickle              generate pickle of the correl matrix output as well
+  --sort                add sorted output for correl matrix
+  --whitelist           Uses feat_whitelist or --lex_table and --categories.
+  --blacklist           Uses feat_blacklist or --lex_table and --categories.
+  --spearman            Use Spearman R instead of Pearson.
+  --logistic_reg        Use logistic regression instead of linear regression.
+                        This is better for binary outcomes.
+  --IDP, --idp          Use IDP instead of linear regression/correlation [only
+                        works with binary outcome values]
+  --AUC, --auc          Use AUC instead of linear regression/correlation [only
+                        works with binary outcome values]
+  --zScoreGroup         Outputs a certain group's zScore for all feats, which
+                        group is determined by the boolean outcome value [MUST
+                        be boolean outcome]
+  --p_correction METHOD
+                        Specify a p-value correction method: simes, holm,
+                        hochberg, hommel, bonferroni, BH, BY, fdr, none
+  --no_bonferroni       Turn off bonferroni correction of p-values.
+  --no_correction       Turn off BH correction of p-values.
+  --nvalue NVALUE       Report n values.
+  --freq FREQ           Report freqs.
+  --tagcloud_colorscheme TAGCLOUDCOLORSCHEME
+                        specify a color scheme to use for tagcloud generation.
+                        Default: multi, also accepts red, blue, red-random,
+                        redblue, bluered
+  --interactions        Includes interaction terms in multiple regression.
+  --bootstrapp BOOTSTRAPP, --bootstrap BOOTSTRAPP
+                        Bootstrap p-values (only works for AUCs for now)
+  --p_value P           Significance threshold for returning results. Default
+                        = 0.05.
+
+Mediation Variables:
+
+  --mediation           Run mediation analysis.
+  --mediation_bootstrap, --mediation_boot
+                        Run mediation analysis with bootstrapping. The
+                        parametric (non-bootstrapping) method is default.
+  --mediation_boot_num N
+                        The number of repetitions to run in bootstrapping with
+                        mediation analysis. Default = 1000.
+  --outcome_pathstarts FIELD(S) [FIELD(S) ...], --path_starts FIELD(S) [FIELD(S) ...]
+                        Fields in outcome table to use as treatment in
+                        mediation analysis.
+  --outcome_mediators FIELD(S) [FIELD(S) ...], --mediators FIELD(S) [FIELD(S) ...]
+                        Fields in outcome table to use as mediators in
+                        mediation analysis.
+  --feat_as_path_start  Use path start variables located in a feature table.
+                        Used in mediation analysis.
+  --feat_as_outcome     Use outcome variables located in a feature table. Used
+                        in mediation analysis.
+  --feat_as_control     Use control variables located in a feature table. Used
+                        in mediation analysis.
+  --no_features         All mediation analysis variables found corptable. No
+                        feature table needed.
+  --mediation_csv       Print results to a CSV. Default file name is
+                        mediation.csv. Use --output_name to specify file name.
+  --mediation_no_summary
+                        Print results to a CSV. Default file name is
+                        mediation.csv. Use --output_name to specify file name.
+  --mediation_method METHOD
+                        Specify a mediation method: baron, imai, both
+
+Prediction Variables:
+
+  --model name          Model to use when predicting: svc, linear-svc, ridge,
+                        linear.
+  --combined_models name [name ...]
+                        Model to use when predicting: svc, linear-svc, ridge,
+                        linear.
+  --sparse              use sparse representation for X when training /
+                        testing
+  --folds NUM           Number of folds for functions that run n-fold cross-
+                        validation
+  --picklefile filename
+                        Name of file to save or load pickle of model
+  --all_controls_only   Only uses all controls when prediction doing
+                        test_combo_regression
+  --no_lang             Runs with language features excluded
+  --control_combo_sizes index [index ...], --combo_sizes index [index ...]
+                        specify the sizes of control combos to use
+  --residualized_controls, --res_controls
+                        Finds residuals for controls and tries to predict
+                        beyond them (only for combo test)
+  --prediction_csv, --pred_csv
+                        write yhats in a separate csv
+  --weighted_eval WEIGHTEDEVAL
+                        Column to weight the evaluation.
+  --no_standardize      turn off standardizing variables before prediction
+
+Standard Extraction Actions:
+
+  --add_ngrams          add an n-gram feature table. (uses: n, can flag:
+                        sqrt), gzip_csvcan be used with or without
+                        --use_collocs
+  --add_ngrams_from_tokenized
+                        add an n-gram feature table from a tokenized table.
+                        Table must be JSON list of tokens.(uses: n, can flag:
+                        sqrt), gzip_csv.
+  --use_collocs         when extracting ngram features, use a table of
+                        collocations to parse text into ngramsby default does
+                        not include subcollocs, this can be changed with the
+                        --include_sub_collocs option
+  --include_sub_collocs
+                        count all sub n-grams of collocated n-gramsif "happy
+                        birthday" is designated as a collocation, when you see
+                        "happy birthday" in textcount it as an instance of
+                        "happy", "birthday", and "happy birthday"
+  --colloc_pmi_thresh PMI
+                        The PMI threshold for which multigrams from the
+                        colloctable to conscider as valid collocslooks at the
+                        feat_colloc_filter column of the specified colloc
+                        table
+  --add_lex_table       add a lexicon-based feature table. (uses: l,
+                        weighted_lexicon, can flag: anscombe).
+  --add_phrase_table    add constituent and phrase feature tables. (can flag:
+                        sqrt, anscombe).
+  --add_pos_table       add pos feature tables. (can flag: sqrt, anscombe).
+  --add_pos_ngram_table
+                        add pos with ngrams feature table. (can flag: sqrt,
+                        anscombe).
+  --add_lda_table LDA_MSG_TABLE
+                        add lda feature tables. (can flag: sqrt, anscombe).
+  --add_tokenized       adds tokenized version of message table.
+  --add_sent_tokenized  adds sentence tokenized version of message table.
+  --add_parses          adds parsed versions of message table.
+  --add_segmented       adds segmented versions of message table.
+  --segmentation_model SEGMENTATIONMODEL
+                        Chooses which model to use for message segmentation
+                        (CTB or PKU; Default CTB)
+  --add_tweettok        adds tweetNLP tokenized versions of message table.
+  --add_tweetpos        adds tweetNLP pos tagged versions of message table.
+  --add_lda_messages LDA_States_File
+                        add lda topic version of message table.
+  --add_outcome_feats   add a feature table from the specified outcome table.
+  --add_topiclex_from_topicfile
+                        creates a lexicon from a topic file, requires
+                        --topic_file --topic_lexicon --lex_thresh
+                        --topic_lex_method
+  --print_tokenized_lines FILENAME
+                        prints tokenized version of messages to lines.
+  --print_joined_feature_lines FILENAME
+                        prints feature table with line per group joined by
+                        spaces (with MWEs joined by underscores) for import
+                        into Mallet.
+  --add_timexdiff       extract timeex difference features (mean and std) per
+                        group.
+  --add_postimexdiff    extract timeex difference features and POS tags per
+                        group.
+  --add_wn_nopos        extract WordNet concept features (not considering POS)
+                        per group.
+  --add_wn_pos          extract WordNet concept features (considering POS) per
+                        group.
+  --add_fleschkincaid, --add_fkscore
+                        add flesch-kincaid scores, averaged per group.
+  --add_pnames ADDPNAMES ADDPNAMES
+                        add an people names feature table. (two agrs:
+                        NAMES_LEX, ENGLISH_LEX, can flag: sqrt)
+
+Semantic Extraction Actions:
+
+  --add_ner             extract ner features from xml files (corptable should
+                        be directory of xml files).
+
+Feature Table Aanalyses:
+
+  --ttest_feat_tables   Performs ttest on differences between group norms for
+                        2 tables, within features
+
+Refinement Actions:
+
+  --feat_occ_filter     remove infrequent features. (uses variables feat_table
+                        and p_occ).
+  --combine_feat_tables COMBINEFEATTABLES
+                        Given multiple feature table, combines them (provide
+                        feature name)
+  --add_feat_norms      calculates and adds the mean normalized (feat_norm)
+                        value for each row (uses variable feat_table).
+  --feat_colloc_filter  removes featrues that do not pass as collocations.
+                        (uses feat_table).
+  --feat_correl_filter  removes features that do not pass correlation sig
+                        tests with given outcomes (uses -f --outcome_table
+                        --outcomes).
+  --make_topic_labelmap_lex
+                        Makes labelmap lexicon from topics. Requires
+                        --topic_lexicon, --num_topic_words. Optional:
+                        --weighted_lexicon
+  --feat_group_by_outcomes
+                        Creates a feature table grouped by a given outcome
+                        (requires outcome field, can use controls)
+  --aggregate_feats_by_new_group
+                        Aggregate feature table by group field (i.e.
+                        message_id features by user_ids).
+  --tf_idf              Given an ngram feature table, creates a new feature
+                        table with tf-idf (uses -f).
+
+Outcome Actions:
+
+  --print_csv FILENAME  prints group normalized values use for correlation.
+  --print_freq_csv FILENAME
+                        prints frequencies instead of group normalized values
+  --print_numgroups     prints number of groups per outcome field
+
+Correlation Actions:
+  Finds one relationship at a time (but can still adjust for others)
+
+  --correlate           correlate with outcome (uses variable feat_table and
+                        all outcome variables).
+  --rmatrix             output a correlation matrix to a file in the output
+                        dir.
+  --combo_rmatrix       output a correlation matrix with all combinations of
+                        controls.
+  --topic_dupe_filter   remove topics not passing a duplicate filter from the
+                        correlation matrix
+  --tagcloud            produce data for making wordle tag clouds (same
+                        variables as correlate).
+  --topic_tagcloud      produce data for making topic wordles (must be used
+                        with a topic-based feature table and --topic_lexicon).
+  --make_wordclouds     make wordclouds from the output tagcloud file.
+  --make_topic_wordclouds
+                        make topic wordclouds, needs an output topic tagcloud
+                        file.
+  --use_featuretable_feats
+                        use 1gram table to be used as a whitelist when
+                        plotting
+  --outcome_with_outcome
+                        correlates all outcomes in --outcomes with each other
+                        in addition to the features
+  --output_interaction_terms
+                        with this flag, outputs the coefficients from the
+                        interaction terms as r values the outcome
+                        coefficients. Use with --outcome_interaction FIELD1
+                        [FIELD2 ...]
+  --interaction_ddla INTERACTIONDDLA
+                        column name from the outcome table that is going to be
+                        used in DDLA:First, finding terms with significant
+                        interaction, then taking correlations for groups with
+                        outcome = 1 and = 0 separately
+  --interaction_ddla_pvalue DDLASIGNIFICANCE
+                        Set level of significance to filter ddla features by
+  --DDLA DDLAFILES DDLAFILES
+                        Compares two csv's that have come out of DLA. Requires
+                        --freq and --nvalue to have been used
+  --DDLATagcloud        Makes a tagcloud file from the DDLA output. Uses
+                        deltaR as size, r_INDEX as color.
+
+Multiple Regression Actions:
+  Find multiple relationships at once
+
+  --multir              multivariate regression with outcome (uses variable
+                        feat_table and all outcome variables, optionally csv).
+
+Prediction Actions:
+
+  --train_regression, --train_reg
+                        train a regression model to predict outcomes based on
+                        feature table
+  --test_regression     train/test a regression model to predict outcomes
+                        based on feature table
+  --combo_test_regression, --combo_test_reg
+                        train/test a regression model with and without all
+                        combinations of controls
+  --predict_regression, --predict_reg
+                        predict outcomes based on loaded or trained regression
+                        model
+  --control_adjust_outcomes_regression, --control_adjust_reg
+                        predict outcomes from controls and produce adjusted
+                        outcomes
+  --test_combined_regression featuretable [featuretable ...]
+                        train and test combined model (must specify at least
+                        one addition feature table here)
+  --predict_regression_to_feats PREDICTRTOFEATS
+                        predict outcomes into a feature file (provide a name)
+  --predict_regression_to_outcome_table PREDICTRTOOUTCOMETABLE
+                        predict outcomes into an outcome table (provide a
+                        name)
+  --predict_cv_to_feats PREDICTALLTOFEATS, --predict_combo_to_feats PREDICTALLTOFEATS, --predict_regression_all_to_feats PREDICTALLTOFEATS
+                        predict outcomes into a feature file (provide a name)
+  --train_classifiers, --train_class
+                        train classification models for each outcome field
+                        based on feature table
+  --test_classifiers    trains and tests classification for each outcome
+  --combo_test_classifiers
+                        train/test a regression model with and without all
+                        combinations of controls
+  --predict_classifiers, --predict_class
+                        predict outcomes bases on loaded training
+  --roc                 Computes ROC curves and outputs to PDF
+  --predict_classifiers_to_feats PREDICTCTOFEATS
+                        predict outcomes into a feature file (provide a name)
+  --predict_classifiers_to_outcome_table PREDICTCTOOUTCOMETABLE
+                        predict outcomes into an outcome table (provide a
+                        name)
+  --regression_to_lexicon REGRTOLEX
+                        Uses the regression coefficients to create a weighted
+                        lexicon.
+  --classification_to_lexicon CLASSTOLEX
+                        Uses the classification coefficients to create a
+                        weighted lexicon.
+  --reducer_to_lexicon REDUCERTOLEXICON
+                        writes the reduction model to a specified lexicon
+  --fit_reducer         reduces a feature space to clusters
+  --cca CCA             Performs sparse CCA on a set of features and a set of
+                        outcomes.Argument is number of components to output
+                        (Uses R's PMA package)
+  --cca_penalty_feats PENALTYFEATS, --cca_penaltyx PENALTYFEATS
+                        Penalty value on the feature matrix (X) [penaltyx
+                        argument of PMA.CCA]must be between 0 and 1, larger
+                        means less penalization (i.e. less sparse)
+  --cca_penalty_outcomes PENALTYOUTCOMES, --cca_penaltyz PENALTYOUTCOMES
+                        Penalty value on the outcomes matrix (Z) [penaltyz
+                        argument of PMA.CCA]must be between 0 and 1, larger
+                        means less penalization (i.e. less sparse)
+  --cca_outcomes_vs_controls
+                        performs CCA on outcomes vs controls (no language)
+  --cca_permute CCAPERMUTE
+                        Wrapper for the PMA package CCA.permute function that
+                        determines the ideal L1 Penalties for X and Z
+                        matricesargument: number of permutations
+  --cca_predict_components
+                        Using --picklefile, predict outcomes from the V matrix
+                        (aka Z_comp)
+  --to_sql_table NEWSQLTABLE
+                        Using --cca_predict_components, predict components to
+                        sql table,the name of which you should provide here
+  --train_c2r           train a model that goes from classification to
+                        prediction
+  --test_c2r            trains and tests classification for each outcome
+  --predict_c2r         predict w/ classification to regression model
+  --save_models         saves predictive models (uses --picklefile)
+  --load_models         loads predictive models (uses --picklefile)
+
+Plot Actions:
+
+  --barplot             produce correlation barplots. Requires fg, oa. Uses
+                        groupfreqthresh, outputdir
+  --scatterplot         Requires --outcome_table --outcome_fields, optional:
+                        -f --feature_names
+  --feat_flexibin       Plots a binned feature table, uses --num_bins,
+                        --group_id_range, --feat_table, --flexiplot_file
+  --skip_bin_step       Skips the binning step for feat_flexibin. For when we
+                        want fast plotting and the flexitable has been
+                        created.
+  --preserve_bin_table  Preserves the flexibin table for faster plotting.
+  --descplot            produce histograms and boxplots for specified
+                        outcomes. Requires oa. Uses outputdir
+  --loessplot FEAT(S) [FEAT(S) ...]
+                        Output loess plots of the given features.

@@ -1,0 +1,2 @@
+delete from text_mining.tweets;
+commit;
