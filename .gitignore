@@ -88,5 +88,8 @@ ENV/
 # Rope project settings
 .ropeproject
 
-# output files
-output/
+#output files
+proj/output/
+
+# pyc files
+*.pyc

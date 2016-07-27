@@ -39,7 +39,7 @@ from liwc_functions import AnalyzeAndCorrelateLIWC
 DEF_HOST = 'localhost'
 DEF_DB = 'text_mining'
 DEF_USER = 'root'
-DEF_PASS = 'root'
+DEF_PASS = '' # 'root'
 DEF_TABLE = 'twts'
 DEF_HEADER1 = False
 DEF_SEPERATOR1 = '\t'
@@ -83,6 +83,8 @@ def main(fn_args = None):
                        help='Host that the mysql server runs on (default: %s)' % DEF_HOST)
     group.add_argument('-d', '--db', metavar='DB', dest='db', default=DEF_DB,
                         help='Target Database Name.')
+    group.add_argument('-u', '--user', metavar='USER', dest='user', default=DEF_USER,
+                        help='Database user name.')
     group.add_argument('-t', '--table', metavar='TABLE', dest='table', default=DEF_TABLE,
                         help='Target Table.')
     group.add_argument('-f1', '--file1', metavar='FILE1', dest='file1',
