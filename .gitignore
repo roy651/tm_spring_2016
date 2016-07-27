@@ -90,3 +90,6 @@ ENV/
 
 #output files
 proj/output/
+
+# pyc files
+*.pyc
