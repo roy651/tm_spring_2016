@@ -63,7 +63,7 @@ def GenTopics(_host, _user, _passwd, _db, _table, useGensim=False):
         model = models.LdaModel(corpus, num_topics=50, id2word=corpus.dictionary, passes=100)
     else:
         mallet_path = '/home/royabitbol/Development/mallet/bin/mallet'
-        model = models.wrappers.LdaMallet(mallet_path, corpus, num_topics=50, id2word=corpus.dictionary)
+        model = models.wrappers.LdaMallet(mallet_path, corpus, num_topics=50, id2word=corpus.dictionary, iterations=100)
     # ...
 
     # now use the trained model to infer topics on a new document
@@ -74,3 +74,8 @@ def GenTopics(_host, _user, _passwd, _db, _table, useGensim=False):
 
     # print model.show_topics(num_topics=50, num_words=10, log=False, formatted=False)
     print model.print_topics(num_topics=50, num_words=10)
+    logfile = open('topics.csv', 'w')
+    print>>logfile, model.show_topics(num_topics=50, num_words=10)
+    # f = open('topics_.csv', 'w')
+    # f.write(mode.show_topics(num_topics=50, num_words=10))
+    # f.close
