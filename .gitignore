@@ -92,4 +92,7 @@ ENV/
 proj/output/
 
 # pyc files
-*.pyc
+proj/*.pyc
+proj/util/*.pyc
+proj/util/lexicons/*.pyc
+proj/util/lexicons/lib/*.pyc
