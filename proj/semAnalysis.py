@@ -157,7 +157,7 @@ def main(fn_args = None):
         if args.topics:
             GenTopics(args.host, DEF_USER, DEF_PASS, args.db, deduped_table1, args.gensim)
         if args.wordcloud:
-            GenWordcloud(args.host, DEF_USER, DEF_PASS, args.db, deduped_table1)
+            GenWordcloud(args.host, DEF_USER, DEF_PASS, args.db, deduped_table1, args.file1)
         if args.ngrams:
             GenNGrams(args.host, DEF_USER, DEF_PASS, args.db, deduped_table1, args.group1)
 
@@ -180,7 +180,7 @@ def main(fn_args = None):
         if args.topics:
             GenTopics(args.host, DEF_USER, DEF_PASS, args.db, deduped_table2, args.gensim)
         if args.wordcloud:
-            GenWordcloud(args.host, DEF_USER, DEF_PASS, args.db, deduped_table2)
+            GenWordcloud(args.host, DEF_USER, DEF_PASS, args.db, deduped_table2, args.file2)
         if args.ngrams:
             GenNGrams(args.host, DEF_USER, DEF_PASS, args.db, deduped_table2, args.group2)
 
