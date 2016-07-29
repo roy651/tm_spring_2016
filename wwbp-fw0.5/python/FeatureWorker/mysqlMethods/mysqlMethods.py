@@ -6,14 +6,11 @@ import csv
 from random import sample
 from math import floor
 
-from FeatureWorker.fwConstants import MAX_ATTEMPTS, MYSQL_ERROR_SLEEP, DEF_ENCODING, MAX_SQL_PRINT_CHARS, DEF_UNICODE_SWITCH, warn
+from FeatureWorker.fwConstants import MAX_ATTEMPTS, MYSQL_ERROR_SLEEP, DEF_ENCODING, MAX_SQL_PRINT_CHARS, DEF_UNICODE_SWITCH, warn, USER, PASSWD
 
 #DB INFO:
 HOST = 'localhost'
 # USER = getpass.getuser()
-USER = 'root'
-PASSWD = 'root'
-
 
 def executeGetSSCursor(db, sql, warnMsg = True, charset=DEF_ENCODING, use_unicode=DEF_UNICODE_SWITCH):
     """Executes a given query (ss cursor is good to iterate over for large returns)"""

@@ -18,16 +18,18 @@ import sys
 import pdb
 import argparse
 import time
-import subprocess
 from pprint import pprint
 from numpy import isnan, sqrt, log2
 from ConfigParser import SafeConfigParser
 import sys
 sys.path.insert(0, 'util')
+import utils_globals
 from db_util import StoreDB
+from db_util import DropAllTables
 from dedup import DedupRecords
 from runMallet import GenTopics
 from wc import GenWordcloud
+from ngrams import GenNGrams
 from liwc_functions import AnalyzeLIWC
 from liwc_functions import CorrelateLIWC
 from liwc_functions import AnalyzeAndCorrelateLIWC
@@ -53,10 +55,10 @@ DEF_TOPICS = False
 DEF_LIWC = False
 DEF_WORDCLOUD = False
 DEF_GENSIM = False
+DEF_KEEPDB = False
 
 DEF_MESSAGE_FIELD = 'tweet_text'
 DEF_MESSAGE_FIELD = 'tweet_id'
-
 
 #################################################################
 ### Main / Command-Line Processing:
@@ -85,6 +87,8 @@ def main(fn_args = None):
                         help='Target Database Name.')
     group.add_argument('-u', '--user', metavar='USER', dest='user', default=DEF_USER,
                         help='Database user name.')
+    group.add_argument('-p', '--pass', metavar='PASS', dest='passwd', default=DEF_PASS,
+                        help='Database user password.')
     group.add_argument('-t', '--table', metavar='TABLE', dest='table', default=DEF_TABLE,
                         help='Target Table.')
     group.add_argument('-f1', '--file1', metavar='FILE1', dest='file1',
@@ -114,6 +118,8 @@ def main(fn_args = None):
                         help='Generate LIWC true or false')
     group.add_argument('-W', '--wordcloud', action='store_true', dest='wordcloud', default=DEF_WORDCLOUD,
                         help='Generate Word Cloud true or false')
+    group.add_argument('-K', '--keepdb', action='store_true', dest='keepdb', default=DEF_KEEPDB,
+                        help='Keep DB tables at the end of the run')
 
 
     # group.add_argument('--message_field', metavar='FIELD', dest='message_field', default=DEF_MESSAGE_FIELD,
@@ -134,60 +140,62 @@ def main(fn_args = None):
     # def SE():
     #     return SemanticsExtractor(args.corpdb, args.corptable, args.correl_field, args.mysql_host, args.message_field, args.messageid_field, args.encoding, args.nounicode, args.lexicondb, args.corpdir, wordTable = args.wordTable)
 
-    curr_time = str(int(round(time.time() * 1000)))
+    utils_globals.UNIQUE_ID = curr_time = str(int(round(time.time() * 1000)))
     output_folder = 'output/' + curr_time + '/'
-    orig_folder = os.getcwd()
+    utils_globals.BASE_DIR = orig_folder = os.getcwd()
     os.makedirs(output_folder)
 
     deduped_table1 = None
     if args.file1:
         table_name = args.table + '_' + curr_time + '_1f'
         #### Load into DB
-        StoreDB(args.host, DEF_USER, DEF_PASS, args.db, table_name, args.file1, args.header1, args.seperator1)
+        StoreDB(args.host, args.user, args.passwd, args.db, table_name, args.file1, args.header1, args.seperator1)
         #### Clear duplicate records
-        deduped_table1 = DedupRecords(args.host, DEF_USER, DEF_PASS, args.db, table_name)
+        deduped_table1 = DedupRecords(args.host, args.user, args.passwd, args.db, table_name)
         os.chdir(output_folder)
         #### Generate liwc
         if args.liwc:
             if args.group1 != DEF_GROUP1:
-                AnalyzeAndCorrelateLIWC(args.host, DEF_USER, DEF_PASS, args.db, deduped_table1, args.file1, args.group1)
+                AnalyzeAndCorrelateLIWC(args.host, args.user, args.passwd, args.db, deduped_table1, args.file1, args.group1)
             else:
-                AnalyzeLIWC(args.host, DEF_USER, DEF_PASS, args.db, deduped_table1, args.file1)
+                AnalyzeLIWC(args.host, args.user, args.passwd, args.db, deduped_table1, args.file1)
         #### Generate topics
         if args.topics:
-            GenTopics(args.host, DEF_USER, DEF_PASS, args.db, deduped_table1, args.gensim)
+            GenTopics(args.host, args.user, args.passwd, args.db, deduped_table1, args.gensim)
         if args.wordcloud:
-            GenWordcloud(args.host, DEF_USER, DEF_PASS, args.db, deduped_table1, args.file1)
+            GenWordcloud(args.host, args.user, args.passwd, args.db, deduped_table1, args.file1)
         if args.ngrams:
-            GenNGrams(args.host, DEF_USER, DEF_PASS, args.db, deduped_table1, args.group1)
+            GenNGrams(args.host, args.user, args.passwd, args.db, deduped_table1, args.group1)
 
     os.chdir(orig_folder)
     deduped_table2 = None
     if args.file2:
         table_name = args.table + '_' + curr_time + '_2f'
         #### Load into DB
-        StoreDB(args.host, DEF_USER, DEF_PASS, args.db, table_name, args.file2, args.header2, args.seperator2)
+        StoreDB(args.host, args.user, args.passwd, args.db, table_name, args.file2, args.header2, args.seperator2)
         #### Clear duplicate records
-        deduped_table2 = DedupRecords(args.host, DEF_USER, DEF_PASS, args.db, table_name)
+        deduped_table2 = DedupRecords(args.host, args.user, args.passwd, args.db, table_name)
         os.chdir(output_folder)
         #### Generate liwc
         if args.liwc:
             if args.group2 != DEF_GROUP2:
-                AnalyzeAndCorrelateLIWC(args.host, DEF_USER, DEF_PASS, args.db, deduped_table2, args.file2, args.group2)
+                AnalyzeAndCorrelateLIWC(args.host, args.user, args.passwd, args.db, deduped_table2, args.file2, args.group2)
             else:
-                AnalyzeLIWC(args.host, DEF_USER, DEF_PASS, args.db, deduped_table2, args.file2)
+                AnalyzeLIWC(args.host, args.user, args.passwd, args.db, deduped_table2, args.file2)
         #### Generate topics
         if args.topics:
-            GenTopics(args.host, DEF_USER, DEF_PASS, args.db, deduped_table2, args.gensim)
+            GenTopics(args.host, args.user, args.passwd, args.db, deduped_table2, args.gensim)
         if args.wordcloud:
-            GenWordcloud(args.host, DEF_USER, DEF_PASS, args.db, deduped_table2, args.file2)
+            GenWordcloud(args.host, args.user, args.passwd, args.db, deduped_table2, args.file2)
         if args.ngrams:
-            GenNGrams(args.host, DEF_USER, DEF_PASS, args.db, deduped_table2, args.group2)
+            GenNGrams(args.host, args.user, args.passwd, args.db, deduped_table2, args.group2)
 
     if args.file1 and args.file2 and args.liwc:
         #### Correlate liwc
-        CorrelateLIWC(args.host, DEF_USER, DEF_PASS, args.db, deduped_table1, deduped_table2, args.file1, args.file2)
+        CorrelateLIWC(args.host, args.user, args.passwd, args.db, deduped_table1, deduped_table2, args.file1, args.file2)
 
+    if not args.keepdb:
+        DropAllTables(args.host, args.user, args.passwd, args.db)
 
 
 if __name__ == "__main__":

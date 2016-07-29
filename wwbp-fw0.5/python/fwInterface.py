@@ -21,6 +21,7 @@ import time
 from pprint import pprint
 from numpy import isnan, sqrt, log2
 from FeatureWorker import DDLA
+from FeatureWorker.fwConstants import USER, PASSWD
 from ConfigParser import SafeConfigParser
 
 #wwbp
@@ -55,8 +56,8 @@ from FeatureWorker.featureRefiner import FeatureRefiner
 
 HOST = ''
 # USER = getpass.getuser()
-USER = 'root'
-PASSWD = 'root'
+DEF_USER = 'root'
+DEF_PASS = ''
 
 MAX_ATTEMPTS = 10 #max number of times to try a query before exiting
 PROGRESS_AFTER_ROWS = 5000 #the number of rows to process between each progress updated
@@ -178,6 +179,10 @@ def main(fn_args = None):
 
     group.add_argument('-d', '--corpdb', metavar='DB', dest='corpdb', default=getInitVar('corpdb', conf_parser, DEF_CORPDB),
                         help='Corpus Database Name.')
+    group.add_argument('-u', '--user', metavar='USER', dest='user', default=DEF_USER,
+                        help='Database user name.')
+    group.add_argument('-p', '--pass', metavar='PASS', dest='passwd', default=DEF_PASS,
+                        help='Database user password.')
     group.add_argument('-t', '--corptable', metavar='TABLE', dest='corptable', default=getInitVar('corptable', conf_parser, DEF_CORPTABLE),
                         help='Corpus Table.')
     group.add_argument('-c', '--correl_field', metavar='FIELD', dest='correl_field', default=getInitVar('correl_field', conf_parser, DEF_CORREL_FIELD),
@@ -653,6 +658,11 @@ def main(fn_args = None):
         args = parser.parse_args(fn_args.split())
     else:
         args = parser.parse_args(remaining_argv)
+
+    global USER
+    USER = args.user
+    global PASSWD
+    PASSWD = args.passwd
 
     if not args.bonferroni:
       print "--no_bonf has been depricated. Default p correction method is now Benjamini, Hochberg. Please use --no_correction instead of --no_bonf."

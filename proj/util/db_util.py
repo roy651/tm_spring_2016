@@ -94,7 +94,7 @@ def ReadTweetsStr(_host, _user, _passwd, _db, _table, _field=None):
 
         if _field != None:
             result = {}
-            # int_field = _field + '_int'
+            # int_field = _field + '_i'
             # if int_field in df:
             #     _field = int_field
             unique_values = df[_field].unique()
@@ -111,3 +111,33 @@ def ReadTweetsStr(_host, _user, _passwd, _db, _table, _field=None):
     except Exception as e:
         print(e)
         # print("Unknown error occurred")
+
+def GetAllTableNames(_host, _user, _passwd, _db):
+    try:
+        connection = MySQLdb.connect(host=_host,
+                                    user=_user,
+                                    passwd=_passwd,
+                                    db=_db)  # create the connection
+        cursor = connection.cursor()     # get the cursor
+        cursor.execute("SHOW TABLES")
+        return cursor.fetchall()
+    except MySQLdb.Error as e:
+        print(e)
+    except Exception as e:
+        print(e)
+
+def DropAllTables(_host, _user, _passwd, _db):
+    try:
+        connection = MySQLdb.connect(host=_host,
+                                    user=_user,
+                                    passwd=_passwd,
+                                    db=_db)  # create the connection
+        cursor = connection.cursor()     # get the cursor
+        cursor.execute("SHOW TABLES")
+        parts = ('DROP TABLE IF EXISTS %s;' % table for (table,) in cursor.fetchall())
+        sql = 'SET FOREIGN_KEY_CHECKS = 0;\n' + '\n'.join(parts) + 'SET FOREIGN_KEY_CHECKS = 1;\n'
+        connection.cursor().execute(sql)
+    except MySQLdb.Error as e:
+        print(e)
+    except Exception as e:
+        print(e)

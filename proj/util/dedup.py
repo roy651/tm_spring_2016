@@ -105,19 +105,19 @@ def DedupRecords(_host, _user, _passwd, _db, _table):
             password=_passwd)
         # eng = create_engine('mysql://root:root@localhost/text_mining')
         eng = create_engine(db_url)
-        deduped_table = _table + '_dedup'
+        deduped_table = _table + '_de'
 
         df = pd.read_sql_table(table_name=_table, con=eng, schema=_db)
         df.drop_duplicates(['tweet_text'], inplace=True)
 
         df['tweeter_id'] = df[['tweeter_id','tweeter_screen_name']].apply(lambda x: SelectValue(x[0], x[1], r), axis=1)
         df[['tweeter_id', 'tweet_id']] = df[['tweeter_id', 'tweet_id']].astype(int)
-        df['sarcasm_int'] = df['sarcasm'].apply(SarcasmInt)
-        df['sarcasm'] = df['sarcasm_int'].apply(SarcasmStr)
-        df['talk_about_int'] = df['talk_about'].apply(TalkAboutInt)
-        df['talk_about'] = df['talk_about_int'].apply(TalkAboutStr)
-        df['posted_by_int'] = df['posted_by'].apply(PostedByInt)
-        df['posted_by'] = df['posted_by_int'].apply(PostedByStr)
+        df['sarcasm_i'] = df['sarcasm'].apply(SarcasmInt)
+        df['sarcasm'] = df['sarcasm_i'].apply(SarcasmStr)
+        df['talk_about_i'] = df['talk_about'].apply(TalkAboutInt)
+        df['talk_about'] = df['talk_about_i'].apply(TalkAboutStr)
+        df['posted_by_i'] = df['posted_by'].apply(PostedByInt)
+        df['posted_by'] = df['posted_by_i'].apply(PostedByStr)
         df['tweet_text'] = df['tweet_text'].apply(ClearStopwords)
         df.to_sql(deduped_table, eng, 'mysql', _db, if_exists='replace')
         print "Success"

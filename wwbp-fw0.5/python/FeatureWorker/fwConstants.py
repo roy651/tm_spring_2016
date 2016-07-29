@@ -33,7 +33,7 @@ from rpy2.robjects.packages import importr
 #DB INFO:
 # USER = getpass.getuser()
 USER = 'root'
-PASSWD = 'root'
+PASSWD = ''
 
 MAX_ATTEMPTS = 5 #max number of times to try a query before exiting
 PROGRESS_AFTER_ROWS = 5000 #the number of rows to process between each progress updated
