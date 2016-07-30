@@ -105,5 +105,12 @@ python semAnalysis.py -f1 hiv.csv -h1 -L -g1 talk_about
 
 ```
 python semAnalysis.py -f1 hiv.csv -h1 -L -f2 asthma.csv -h2
+<<<<<<< HEAD
 ```
 ..* Process the two input file using LIWC techniques and provide a correlation matrix to compare them
+=======
+    - Process the two input file using LIWC techniques and provide a correlation matrix to compare them
+    
+
+    
+>>>>>>> 9d6c02a97b4733f50668013fda9be3ba9b1977e5
