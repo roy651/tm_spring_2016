@@ -106,6 +106,7 @@ def ReadTweetsStr(_host, _user, _passwd, _db, _table, _field=None):
             return result
         else:
             return df.to_string(columns=['tweet_text'], header=False, index=False, index_names=False)
+            
     except MySQLdb.Error as e:
         print(e)
     except Exception as e:
@@ -141,3 +142,20 @@ def DropAllTables(_host, _user, _passwd, _db):
         print(e)
     except Exception as e:
         print(e)
+
+def GetDistinctValues(_host, _user, _passwd, _db, _table, _field):
+    try:
+
+        db_url = URL(drivername='mysql', host=_host,
+            database=_db, username=_user,
+            password=_passwd)
+        # eng = create_engine('mysql://root:root@localhost/text_mining')
+        eng = create_engine(db_url)
+        df = pd.read_sql_table(table_name=_table, con=eng, schema=_db)
+        return df[_field].unique()
+
+    except MySQLdb.Error as e:
+        print(e)
+    except Exception as e:
+        print(e)
+        # print("Unknown error occurred")

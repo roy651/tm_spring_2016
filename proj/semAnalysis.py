@@ -18,6 +18,7 @@ import sys
 import pdb
 import argparse
 import time
+import logging
 from pprint import pprint
 from numpy import isnan, sqrt, log2
 from ConfigParser import SafeConfigParser
@@ -57,6 +58,9 @@ DEF_WORDCLOUD = False
 DEF_GENSIM = False
 DEF_KEEPDB = False
 
+DEF_ITERATIONS = 1000
+DEF_NUM_TOPICS = 50
+
 DEF_MESSAGE_FIELD = 'tweet_text'
 DEF_MESSAGE_FIELD = 'tweet_id'
 
@@ -69,6 +73,10 @@ def main(fn_args = None):
     :param fn_args: string - ex "-d testing -t msgs -c user_id --add_ngrams -n 1 "
     '''
     start_time = time.time()
+    # create console handler and set level to debug
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+
 
     ##Argument Parser:
     init_parser = argparse.ArgumentParser(prefix_chars='-+', formatter_class=argparse.ArgumentDefaultsHelpFormatter, add_help=False)
@@ -121,6 +129,10 @@ def main(fn_args = None):
     group.add_argument('-K', '--keepdb', action='store_true', dest='keepdb', default=DEF_KEEPDB,
                         help='Keep DB tables at the end of the run')
 
+    group.add_argument('-Ti', '--iterations', metavar='ITERATIONS', dest='iterations', default=DEF_ITERATIONS,
+                        help='Num of iterations for topic generation')
+    group.add_argument('-Tt', '--num_topics', metavar='NUMTOPICS', dest='num_topics', default=DEF_NUM_TOPICS,
+                        help='Num of topics to generate')
 
     # group.add_argument('--message_field', metavar='FIELD', dest='message_field', default=DEF_MESSAGE_FIELD,
     #                     help='The field where the text to be analyzed is located.')
@@ -161,9 +173,9 @@ def main(fn_args = None):
                 AnalyzeLIWC(args.host, args.user, args.passwd, args.db, deduped_table1, args.file1)
         #### Generate topics
         if args.topics:
-            GenTopics(args.host, args.user, args.passwd, args.db, deduped_table1, args.gensim)
+            GenTopics(args.host, args.user, args.passwd, args.db, deduped_table1, args.group1, int(args.iterations), int(args.num_topics), args.gensim)
         if args.wordcloud:
-            GenWordcloud(args.host, args.user, args.passwd, args.db, deduped_table1, args.file1)
+            GenWordcloud(args.host, args.user, args.passwd, args.db, deduped_table1, args.file1, args.group1)
         if args.ngrams:
             GenNGrams(args.host, args.user, args.passwd, args.db, deduped_table1, args.group1)
 
@@ -184,9 +196,9 @@ def main(fn_args = None):
                 AnalyzeLIWC(args.host, args.user, args.passwd, args.db, deduped_table2, args.file2)
         #### Generate topics
         if args.topics:
-            GenTopics(args.host, args.user, args.passwd, args.db, deduped_table2, args.gensim)
+            GenTopics(args.host, args.user, args.passwd, args.db, deduped_table2, args.group2, int(args.iterations), int(args.num_topics), args.gensim)
         if args.wordcloud:
-            GenWordcloud(args.host, args.user, args.passwd, args.db, deduped_table2, args.file2)
+            GenWordcloud(args.host, args.user, args.passwd, args.db, deduped_table2, args.file2, args.group2)
         if args.ngrams:
             GenNGrams(args.host, args.user, args.passwd, args.db, deduped_table2, args.group2)
 
