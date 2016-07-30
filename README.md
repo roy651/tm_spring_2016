@@ -15,7 +15,7 @@ usage: semAnalysis.py [-h] [-H HOST] [-d DB] [-u USER] [-p PASS] [-t TABLE]
 ```
 python semAnalysis.py -f1 hiv.csv -h1
 ```
-..* Process a file with a header row - but essentially do nothing (no additional flags)
+* Process a file with a header row - but essentially do nothing (no additional flags)
 ..* Removing the h1 flag will read the first line as data (instead of ignoring it)
 ..* Adding the -s1 flag with a seperator character allows to read files with other delimiters
 ..* The commend allows the processing of either one or two input files together
