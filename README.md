@@ -2,9 +2,12 @@
 ### Eran Temstet / Roy Abitbol
 ### Text Mining / Spring 2016 / Haifa University / Information Systems
 
+#### Instructions:
+1. Change directory into the proj folder 
+2. Ensure MySql is running. Run: `mysql-ctl start` 
+3. Finally you can run `python semAnalysis.py ...` with the relevant flags.
 
-Change directory into the proj folder and then run `python semAnalysis.py ...` using the relevant flags below.
-See examples for reference.
+See examples below for reference.
 
 
 ```
