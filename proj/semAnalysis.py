@@ -60,6 +60,7 @@ DEF_KEEPDB = False
 
 DEF_ITERATIONS = 1000
 DEF_NUM_TOPICS = 50
+DEF_TOPICS_WC = False
 
 DEF_MESSAGE_FIELD = 'tweet_text'
 DEF_MESSAGE_FIELD = 'tweet_id'
@@ -133,6 +134,8 @@ def main(fn_args = None):
                         help='Num of iterations for topic generation')
     group.add_argument('-Tt', '--num_topics', metavar='NUMTOPICS', dest='num_topics', default=DEF_NUM_TOPICS,
                         help='Num of topics to generate')
+    group.add_argument('-Tw', '--topics_wc', action='store_true', dest='topics_wc', default=DEF_TOPICS_WC,
+                        help='Generate wordclouds from topics')
 
     # group.add_argument('--message_field', metavar='FIELD', dest='message_field', default=DEF_MESSAGE_FIELD,
     #                     help='The field where the text to be analyzed is located.')
@@ -173,7 +176,7 @@ def main(fn_args = None):
                 AnalyzeLIWC(args.host, args.user, args.passwd, args.db, deduped_table1, args.file1)
         #### Generate topics
         if args.topics:
-            GenTopics(args.host, args.user, args.passwd, args.db, deduped_table1, args.group1, int(args.iterations), int(args.num_topics), args.gensim)
+            GenTopics(args.host, args.user, args.passwd, args.db, deduped_table1, args.group1, int(args.iterations), int(args.num_topics), args.topics_wc, args.gensim)
         if args.wordcloud:
             GenWordcloud(args.host, args.user, args.passwd, args.db, deduped_table1, args.file1, args.group1)
         if args.ngrams:
@@ -196,7 +199,7 @@ def main(fn_args = None):
                 AnalyzeLIWC(args.host, args.user, args.passwd, args.db, deduped_table2, args.file2)
         #### Generate topics
         if args.topics:
-            GenTopics(args.host, args.user, args.passwd, args.db, deduped_table2, args.group2, int(args.iterations), int(args.num_topics), args.gensim)
+            GenTopics(args.host, args.user, args.passwd, args.db, deduped_table2, args.group2, int(args.iterations), int(args.num_topics), args.topics_wc, args.gensim)
         if args.wordcloud:
             GenWordcloud(args.host, args.user, args.passwd, args.db, deduped_table2, args.file2, args.group2)
         if args.ngrams:

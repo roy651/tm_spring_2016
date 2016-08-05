@@ -6,6 +6,7 @@ import traceback
 import utils_globals
 from gensim import corpora, models, utils
 from db_util import GetDistinctValues
+from wc import GenWordcloudRaw
 logging.basicConfig(format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO)
 
 def iter_rows(_host, _user, _passwd, _db, _table, _group, _value):
@@ -63,20 +64,20 @@ class InitCorpus(object):
                                 self.table, self.group, self.value):
             yield self.dictionary.doc2bow(tokens)
 
-def GenTopics(_host, _user, _passwd, _db, _table, _group, _iterations, _num_topics, _useGensim=False):
+def GenTopics(_host, _user, _passwd, _db, _table, _group, _iterations, _num_topics, _gen_wc, _useGensim=False):
     if _group in ['talk_about', 'sarcasm', 'posted_by']:
         values = GetDistinctValues(_host, _user, _passwd, _db, _table, _group)
 
         for group_value in values:
             # set up the streamed corpus
             corpus = InitCorpus(_host, _user, _passwd, _db, _table, _group, group_value)
-            run_mallet(corpus, _iterations, _num_topics, _useGensim, _group, group_value)
+            run_mallet(corpus, _iterations, _num_topics, _gen_wc, _useGensim, _group, group_value)
     else:
         corpus = InitCorpus(_host, _user, _passwd, _db, _table)
-        run_mallet(corpus, _iterations, _num_topics, _useGensim)
+        run_mallet(corpus, _iterations, _num_topics, _gen_wc, _useGensim)
         
       
-def run_mallet(_corpus, _iterations, _num_topics, _useGensim, _group=None, _value=None):
+def run_mallet(_corpus, _iterations, _num_topics, _gen_wc, _useGensim, _group=None, _value=None):
     # train LDA topics
     print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
     suffix = '_' + _group + '_' + _value if _group is not None else ''
@@ -103,16 +104,25 @@ def run_mallet(_corpus, _iterations, _num_topics, _useGensim, _group=None, _valu
 
     ft = open('topics' + suffix + '.csv', 'w')
     fp = open('topicsProb' + suffix + '.csv', 'w')
+    words = []
+    freqs = []
     i = 0
     # We print the topics
     for topic in model.show_topics(num_topics=_num_topics, formatted=False, num_words=10):
         i = i + 1
         print "Topic #" + str(i) + ":",
         ft.write(str(i))
+        if _useGensim:
+            _,topic = topic
         for p, id in topic:
+            if _useGensim:
+                id, p = p, id
+            words.append(id)
+            freqs.append(p)
+            # freqs.append(int(p*1000))
             ft.write(",%s" % (id))
             fp.write("%s,%s,%s\n" %(str(i), id, p))
         ft.write("\n")
-
+        GenWordcloudRaw(words, freqs, 'topic#'+str(i), _group, _value)
     ft.close
     fp.close
