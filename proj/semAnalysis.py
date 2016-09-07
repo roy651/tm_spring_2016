@@ -40,7 +40,7 @@ from liwc_functions import AnalyzeAndCorrelateLIWC
 ##
 #
 DEF_HOST = 'localhost'
-DEF_DB = 'text_mining'
+DEF_DB = 'c9'
 DEF_USER = 'root'
 DEF_PASS = '' # 'root'
 DEF_TABLE = 'twts'
@@ -50,6 +50,7 @@ DEF_GROUP1 = 'tweeter_id'
 DEF_HEADER2 = False
 DEF_SEPERATOR2 = '\t'
 DEF_GROUP2 = 'tweeter_id'
+DEF_UNIQUE = ''
 
 DEF_NGRAMS = False
 DEF_TOPICS = False
@@ -137,6 +138,9 @@ def main(fn_args = None):
     group.add_argument('-Tw', '--topics_wc', action='store_true', dest='topics_wc', default=DEF_TOPICS_WC,
                         help='Generate wordclouds from topics')
 
+    group.add_argument('-U', '--uniqueid', metavar='UNIQUE', dest='uniqueid', default=DEF_UNIQUE,
+                        help='Previousely loaded and cleansed DB table')
+
     # group.add_argument('--message_field', metavar='FIELD', dest='message_field', default=DEF_MESSAGE_FIELD,
     #                     help='The field where the text to be analyzed is located.')
     # group.add_argument('--messageid_field', metavar='FIELDID', dest='messageid_field', default=DEF_MESSAGEID_FIELD_ID,
@@ -155,18 +159,26 @@ def main(fn_args = None):
     # def SE():
     #     return SemanticsExtractor(args.corpdb, args.corptable, args.correl_field, args.mysql_host, args.message_field, args.messageid_field, args.encoding, args.nounicode, args.lexicondb, args.corpdir, wordTable = args.wordTable)
 
-    utils_globals.UNIQUE_ID = curr_time = str(int(round(time.time() * 1000)))
-    output_folder = 'output/' + curr_time + '/'
+    utils_globals.UNIQUE_ID = curr_time = ''
+    if args.uniqueid != '':
+        utils_globals.UNIQUE_ID = curr_time = args.uniqueid
+        output_folder = 'output/' + curr_time + '/'
+    else:
+        utils_globals.UNIQUE_ID = curr_time = str(int(round(time.time() * 1000)))
+        output_folder = 'output/' + curr_time + '/'
+        os.makedirs(output_folder)
     utils_globals.BASE_DIR = orig_folder = os.getcwd()
-    os.makedirs(output_folder)
 
     deduped_table1 = None
     if args.file1:
         table_name = args.table + '_' + curr_time + '_1f'
-        #### Load into DB
-        StoreDB(args.host, args.user, args.passwd, args.db, table_name, args.file1, args.header1, args.seperator1)
-        #### Clear duplicate records
-        deduped_table1 = DedupRecords(args.host, args.user, args.passwd, args.db, table_name)
+        if args.uniqueid == '':
+            #### Load into DB
+            StoreDB(args.host, args.user, args.passwd, args.db, table_name, args.file1, args.header1, args.seperator1)
+            #### Clear duplicate records
+            deduped_table1 = DedupRecords(args.host, args.user, args.passwd, args.db, table_name)
+        else:
+            deduped_table1 = table_name + '_de'
         os.chdir(output_folder)
         #### Generate liwc
         if args.liwc:
@@ -186,10 +198,13 @@ def main(fn_args = None):
     deduped_table2 = None
     if args.file2:
         table_name = args.table + '_' + curr_time + '_2f'
-        #### Load into DB
-        StoreDB(args.host, args.user, args.passwd, args.db, table_name, args.file2, args.header2, args.seperator2)
-        #### Clear duplicate records
-        deduped_table2 = DedupRecords(args.host, args.user, args.passwd, args.db, table_name)
+        if args.uniqueid == '':
+            #### Load into DB
+            StoreDB(args.host, args.user, args.passwd, args.db, table_name, args.file2, args.header2, args.seperator2)
+            #### Clear duplicate records
+            deduped_table2 = DedupRecords(args.host, args.user, args.passwd, args.db, table_name)
+        else:
+            deduped_table2 = table_name + '_de'
         os.chdir(output_folder)
         #### Generate liwc
         if args.liwc:
@@ -209,7 +224,7 @@ def main(fn_args = None):
         #### Correlate liwc
         CorrelateLIWC(args.host, args.user, args.passwd, args.db, deduped_table1, deduped_table2, args.file1, args.file2)
 
-    if not args.keepdb:
+    if not args.keepdb and args.uniqueid == '':
         DropAllTables(args.host, args.user, args.passwd, args.db)
 
 

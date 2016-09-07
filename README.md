@@ -3,9 +3,10 @@
 ### Text Mining / Spring 2016 / Haifa University / Information Systems
 
 #### Instructions:
-1. Change directory into the proj folder 
+1. Change directory into the proj folder: enter "cd proj"
 2. Ensure MySql is running. Run: `mysql-ctl start` 
 3. Finally you can run `python semAnalysis.py ...` with the relevant flags.
+4. If you need php-myadmin access to the DB, run: `phpmyadmin-ctl install`
 
 See examples below for reference.
 
@@ -15,7 +16,7 @@ usage: semAnalysis.py [-h] [-H HOST] [-d DB] [-u USER] [-p PASS] [-t TABLE]
                       [-f1 FILE1] [-s1 SEPERATOR1] [-g1 GROUP1] [-h1]
                       [-f2 FILE2] [-s2 SEPERATOR2] [-g2 GROUP2] [-h2] [-N]
                       [-T] [-G] [-L] [-W] [-K] [-Ti ITERATIONS]
-                      [-Tt NUMTOPICS]
+                      [-Tt NUMTOPICS] [-U uniqueId]
 ```
 
 #### Examples:
@@ -41,12 +42,16 @@ python semAnalysis.py -f1 hiv.csv -h1 -H $IP -d c9 -u root
 ..* -p --pass
 ..* -t --table
 
-
 ```
 python semAnalysis.py -f1 hiv.csv -h1 -K
 ```
 * Process a file with a header row - And keep all intermediate DB tables after the run
 
+
+```
+python semAnalysis.py -f1 hiv.csv -U 1471723537576
+```
+* Process a file which has been previously loaded into the DB - saves time/space loading large files
 
 ```
 python semAnalysis.py -f1 hiv.csv -h1 -W
@@ -129,3 +134,11 @@ python semAnalysis.py -f1 hiv.csv -h1 -L -f2 asthma.csv -h2
 ```
 * Process the two input file using LIWC techniques and provide a correlation matrix to compare them
 
+
+
+
+EXAMPLES:
+   19  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -K -s1 ',' -W -g1 posted_by 
+   20  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -U 1473190943568 -K -s1 ',' -N -g1 posted_by 
+   21  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -U 1473190943568 -K -s1 ',' -T -Ti 200 -Tt 10 -g1 posted_by 
+   22  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -U 1473190943568 -K -s1 ',' -L -g1 posted_by 
