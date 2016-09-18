@@ -124,6 +124,7 @@ def DedupRecords(_host, _user, _passwd, _db, _table):
         df['tweet_text'] = df['tweet_text'].apply(ClearStopwords)
         df['tweet_text'] = df['tweet_text'].str.replace(r"(^|\s)[0-9]+( |$)", " ")
         df['tweet_text'] = df[['tweet_text','disease']].apply(lambda x: clearDisease(x[0],x[1].lower()), axis=1) 
+        df['tweet_text'] = df[['tweet_text','query']].apply(lambda x: clearDisease(x[0],x[1].lower()), axis=1) 
         df.drop_duplicates(['tweet_text'], inplace=True)
         df.to_sql(deduped_table, eng, 'mysql', _db, if_exists='replace')
         print "Success"
