@@ -9,6 +9,8 @@ from db_util import GetDistinctValues
 from wc import GenWordcloudRaw
 logging.basicConfig(format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO)
 
+local_stop = ['don', 've', 'll', 'doesn', 'didn'] # bug fix... why is it needed?
+
 def iter_rows(_host, _user, _passwd, _db, _table, _group, _value):
     """Iterate over all the table rows, yielding one row at a time."""
     try:
@@ -54,7 +56,7 @@ class InitCorpus(object):
         self.dictionary = corpora.Dictionary(iter_rows(self.host, self.user, 
                                              self.passwd, self.db, self.table, 
                                              self.group, self.value))
-        stoplist = set("for a of the and to in is with for an in that this it have just when be it's cant amp at on 3 http https & * ; ... # | - ! ? / , : rt . https://t.co co are th if he we his him has".split())
+        stoplist = set("for a of the and to in is with for an in that this it have just when be it's cant amp at on 3 http https & * ; ... # | - ! ? / , : rt . https://t.co co are th if he we his him has don ve ll".split())
         stop_ids = [self.dictionary.token2id[stopword] for stopword in stoplist if stopword in self.dictionary.token2id]
         self.dictionary.filter_tokens(stop_ids)
         self.dictionary.filter_extremes()  # remove stopwords etc
@@ -104,11 +106,11 @@ def run_mallet(_corpus, _iterations, _num_topics, _gen_wc, _useGensim, _group=No
 
     ft = open('topics' + suffix + '.csv', 'w')
     fp = open('topicsProb' + suffix + '.csv', 'w')
-    words = []
-    freqs = []
     i = 0
     # We print the topics
     for topic in model.show_topics(num_topics=_num_topics, formatted=False, num_words=10):
+        words = []
+        freqs = []
         i = i + 1
         print "Topic #" + str(i) + ":",
         ft.write(str(i))
@@ -117,11 +119,12 @@ def run_mallet(_corpus, _iterations, _num_topics, _gen_wc, _useGensim, _group=No
         for p, id in topic:
             if _useGensim:
                 id, p = p, id
-            words.append(id)
-            freqs.append(p)
-            # freqs.append(int(p*1000))
-            ft.write(",%s" % (id))
-            fp.write("%s,%s,%s\n" %(str(i), id, p))
+            if id not in local_stop:
+                words.append(id)
+                freqs.append(p)
+                # freqs.append(int(p*1000))
+                ft.write(",%s" % (id))
+                fp.write("%s,%s,%s\n" %(str(i), id, p))
         ft.write("\n")
         GenWordcloudRaw(words, freqs, 'topic#'+str(i), _group, _value)
     ft.close

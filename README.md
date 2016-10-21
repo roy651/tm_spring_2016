@@ -139,7 +139,7 @@ python semAnalysis.py -f1 hiv.csv -h1 -L -f2 asthma.csv -h2
 
 EXAMPLES:
    19  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -K -s1 ',' -W -g1 posted_by 
-   20  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -U 1473621796397 -K -s1 ',' -N -g1 posted_by 
-   21  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -U 1473621796397 -K -s1 ',' -T -Ti 200 -Tt 10 -g1 posted_by 
-   22  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -U 1473621796397 -K -s1 ',' -L -g1 posted_by 
+   20  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -U 1477055476489 -K -s1 ',' -N -g1 posted_by 
+   21  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -U 1477055476489 -K -s1 ',' -T -Ti 200 -Tt 10 -g1 posted_by 
+   22  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -U 1477055476489 -K -s1 ',' -L -g1 posted_by 
    

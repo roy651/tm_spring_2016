@@ -27,7 +27,7 @@ def run_wordcloud(_all_text, _name, _group=None, _value=None):
     wc = importr('wordcloud')
     grdevices.png(file=strip_suffix(_name)+new_suffix+".png", width=512, height=512)
     wc.wordcloud(_all_text, max_words=100, min_freq=6, rot_per=0.35,
-        scale=ro.r('c(5,0.8)'), colors=ro.r('brewer.pal(6,"Dark2")'), random_order=False)
+        scale=ro.r('c(5,0.8)'), colors=ro.r('brewer.pal(8,"Dark2")'), random_order=False)
     grdevices.dev_off()
 
 def GenWordcloudRaw(_words, _freqs, _name, _group=None, _value=None):

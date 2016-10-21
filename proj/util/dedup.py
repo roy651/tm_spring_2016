@@ -11,8 +11,10 @@ from nltk.corpus import stopwords
 from happyfuntokenizer import Tokenizer
 
 r = re.compile('^\s*(NULL)*\s*$')
-stop = stopwords.words('english') + ['https://t.co', 'http://t.co', 'https', ':/', 'co', '/', '&', 'amp', ';'] #, '.', '*', ',', '-']
+stop = stopwords.words('english') + ['https://t.co', 'http://t.co', 'https', ':/', 'co', '/', '&', 'amp', ';', 'aids'] #, '.', '*', ',', '-']
 tok = Tokenizer(preserve_case=False)
+
+aids_patch_words = 'hearing|band|venezuela|wheel|dachshund|sleep'
 
 def int_overflow(val):
   if not -sys.maxint-1 <= val <= sys.maxint:
@@ -112,6 +114,7 @@ def DedupRecords(_host, _user, _passwd, _db, _table):
 
         df = pd.read_sql_table(table_name=_table, con=eng, schema=_db)
         df.drop_duplicates(['tweet_text'], inplace=True)
+#        df = df[~df.query('tweet_text in ["band aids"]')]
 
         df['tweeter_id'] = df[['tweeter_id','tweeter_screen_name']].apply(lambda x: SelectValue(x[0], x[1], r), axis=1)
         df[['tweeter_id', 'tweet_id']] = df[['tweeter_id', 'tweet_id']].astype(int)
@@ -121,11 +124,13 @@ def DedupRecords(_host, _user, _passwd, _db, _table):
         df['talk_about'] = df['talk_about_i'].apply(TalkAboutStr)
         df['posted_by_i'] = df['posted_by'].apply(PostedByInt)
         df['posted_by'] = df['posted_by_i'].apply(PostedByStr)
-        df['tweet_text'] = df['tweet_text'].apply(ClearStopwords)
         df['tweet_text'] = df['tweet_text'].str.replace(r"(^|\s)[0-9]+( |$)", " ")
         df['tweet_text'] = df[['tweet_text','disease']].apply(lambda x: clearDisease(x[0],x[1].lower()), axis=1) 
         df['tweet_text'] = df[['tweet_text','query']].apply(lambda x: clearDisease(x[0],x[1].lower()), axis=1) 
-        df.drop_duplicates(['tweet_text'], inplace=True)
+        df = df.drop_duplicates(['tweet_text'])
+        df['tweet_text'] = df['tweet_text'].apply(ClearStopwords)
+        df = df[~df.tweet_text.str.contains(aids_patch_words)]
+
         df.to_sql(deduped_table, eng, 'mysql', _db, if_exists='replace')
         print "Success"
 
