@@ -1,4 +1,4 @@
-# Textual Analysis of Tweets about Diseases 
+### Textual Analysis of Tweets about Diseases 
 ### Eran Temstet / Roy Abitbol
 ### Text Mining / Spring 2016 / Haifa University / Information Systems
 
@@ -142,4 +142,4 @@ EXAMPLES:
    20  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -U 1477055476489 -K -s1 ',' -N -g1 posted_by 
    21  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -U 1477055476489 -K -s1 ',' -T -Ti 200 -Tt 10 -g1 posted_by 
    22  python semAnalysis.py -f1 ASTHMA_org_indiv_combined.csv -h1 -U 1477055476489 -K -s1 ',' -L -g1 posted_by 
-   
+python semAnalysis.py -f1 HIV_ind_vs_org.csv -h1 -s1 ',' -W -K   

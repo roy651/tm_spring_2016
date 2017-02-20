@@ -11,7 +11,7 @@ from nltk.corpus import stopwords
 from happyfuntokenizer import Tokenizer
 
 r = re.compile('^\s*(NULL)*\s*$')
-stop = stopwords.words('english') + ['https://t.co', 'http://t.co', 'https', ':/', 'co', '/', '&', 'amp', ';', 'aids'] #, '.', '*', ',', '-']
+stop = stopwords.words('english') + ['https://t.co', 'http://t.co', 'https', ':/', 'co', '/', '&', 'amp', ';', 'aids', 'hiv', '#hiv'] #, '.', '*', ',', '-']
 tok = Tokenizer(preserve_case=False)
 
 aids_patch_words = 'hearing|band|venezuela|wheel|dachshund|sleep'
