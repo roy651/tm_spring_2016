@@ -61,7 +61,7 @@ python-debian==0.1.21-nmu2ubuntu2
 python-gflags==2.0
 pytz==2016.3
 pyxdg==0.25
-reportlab==3.0
+reportlab==3.5.55
 requests==2.10.0
 rpy2==2.7.9
 scikit-learn==0.17.1
